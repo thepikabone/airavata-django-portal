@@ -13,6 +13,13 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import sys
 
+# Add stubs directory to sys.path so that stub packages for removed
+# dependencies (airavata-python-sdk, airavata-django-portal-sdk,
+# airavata-django-portal-commons, thrift, thrift_connector) are found first.
+# If the real packages are installed, the proxy stubs will delegate to them.
+_STUBS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'stubs')
+sys.path.insert(0, _STUBS_DIR)
+
 from airavata_django_portal_commons import dynamic_apps
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -405,6 +412,10 @@ LOGGING = {
     'loggers': {
         'django_airavata': {
             'handlers': ['console', 'console_debug', 'mail_admins'],
+            'level': 'DEBUG'
+        },
+        'airavata_stubs': {
+            'handlers': ['console', 'console_debug'],
             'level': 'DEBUG'
         },
         'root': {

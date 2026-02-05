@@ -25,13 +25,10 @@ setup(
             'djangorestframework',
             'requests',
             'requests-oauthlib',
-            'thrift',
-            'thrift_connector',
             'wagtail',
             'wagtailfontawesome',
             'jupyter',
             'papermill',
-            "airavata-django-portal-sdk",
     ],
     extras_require={
         'dev': [

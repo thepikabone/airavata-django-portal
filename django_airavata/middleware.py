@@ -17,6 +17,8 @@ class AiravataClientMiddleware:
 
     def __call__(self, request):
         request.airavata_client = utils.airavata_api_client_pool
+        logger.debug("Attached airavata_client to request (user=%s, path=%s)",
+                      getattr(request.user, 'username', 'anonymous'), request.path)
         response = self.get_response(request)
 
         return response
@@ -24,6 +26,9 @@ class AiravataClientMiddleware:
     def process_exception(self, request, exception):
         if isinstance(exception,
                       thrift.transport.TTransport.TTransportException):
+            logger.warning("TTransportException caught (user=%s, path=%s): %s",
+                           getattr(request.user, 'username', 'anonymous'),
+                           request.path, exception)
             return render(
                 request,
                 'django_airavata/error_page.html',
@@ -50,6 +55,8 @@ def profile_service_client(get_response):
             'tenant_profile': utils.tenant_profile_client_pool,
             'user_profile': utils.user_profile_client_pool,
         }
+        logger.debug("Attached profile_service clients to request (user=%s, path=%s)",
+                      getattr(request.user, 'username', 'anonymous'), request.path)
         response = get_response(request)
 
         return response
